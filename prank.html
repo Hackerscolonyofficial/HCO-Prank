@@ -3,27 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <title>System Breach</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      background-color: black;
-      color: white;
-      font-family: monospace;
-      user-select: none;
       overflow: hidden;
+      background-color: black;
+      font-family: monospace;
       height: 100vh;
       width: 100vw;
+      position: fixed;
+      top: 0; left: 0;
+      user-select: none;
     }
 
-    body.flashing {
-      animation: flash 0.5s infinite alternate;
+    body.flicker {
+      animation: flashColors 0.3s infinite;
     }
 
-    @keyframes flash {
-      from { background-color: black; }
-      to   { background-color: darkred; }
+    @keyframes flashColors {
+      0%   { background-color: red; }
+      25%  { background-color: black; }
+      50%  { background-color: white; }
+      75%  { background-color: blue; }
+      100% { background-color: darkred; }
     }
 
     .center-box {
@@ -31,74 +35,142 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(10, 10, 10, 0.85);
-      padding: 30px;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 25px;
       border: 2px solid red;
       border-radius: 10px;
-      box-shadow: 0 0 20px red;
-      z-index: 9999;
+      text-align: center;
+      box-shadow: 0 0 25px red;
     }
 
     h1 {
-      color: red;
-      margin-bottom: 10px;
       font-size: 24px;
+      color: red;
     }
 
-    p {
+    p, #timer {
+      color: #fff;
       font-size: 16px;
-      color: #ccc;
+      margin: 10px 0;
     }
 
-    #timer {
-      font-size: 22px;
-      color: lime;
-      margin-top: 10px;
-      font-weight: bold;
+    #unlock {
+      margin-top: 20px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 14px;
+      background: #111;
+      color: white;
+      border: 1px solid red;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: not-allowed;
+    }
+
+    .shake {
+      animation: shake 0.2s infinite;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(5px, -5px); }
+      50% { transform: translate(-5px, 5px); }
+      75% { transform: translate(5px, 5px); }
+      100% { transform: translate(-5px, -5px); }
+    }
+
+    .explode {
+      animation: explode 0.2s ease-in-out 6;
+    }
+
+    @keyframes explode {
+      0%   { transform: scale(1); background: rgba(255,0,0,0.7); }
+      50%  { transform: scale(1.2); background: white; }
+      100% { transform: scale(1); background: black; }
     }
   </style>
 </head>
-<body class="flashing">
-  <div class="center-box">
+<body class="flicker shake">
+  <div class="center-box" id="centerBox">
     <h1>🔐 Your Phone Has Been Hacked!</h1>
-    <p>All system access has been frozen by Hackers Colony.</p>
+    <p>Rooted Access Detected</p>
+    <p>Your data is being uploaded to remote servers...</p>
     <div id="timer">Timer: 30s</div>
+    <div id="unlock">
+      <input type="password" placeholder="Enter unlock code" disabled>
+      <button disabled>Decrypt</button>
+      <p style="color:orange">Only Hackers Colony can unlock this device.</p>
+    </div>
   </div>
 
   <audio id="voice" src="hackervoice.mp3" preload="auto"></audio>
 
   <script>
-    // Prevent right-click, scroll, and input
+    // Lock controls
+    document.body.style.touchAction = 'none';
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => e.preventDefault(), { passive: false });
     document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
-    document.body.requestFullscreen?.();
 
-    // Play voice (fallback if autoplay fails)
+    // Fullscreen
+    function goFull() {
+      const el = document.documentElement;
+      el.requestFullscreen?.() || el.webkitRequestFullscreen?.() || el.msRequestFullscreen?.();
+    }
+    goFull();
+    document.addEventListener('click', goFull);
+
+    // Audio
     const voice = document.getElementById('voice');
     voice.loop = true;
     voice.play().catch(() => {
       document.body.addEventListener('click', () => voice.play(), { once: true });
     });
 
-    // Infinite vibration every 8 seconds
-    function vibLoop() {
-      navigator.vibrate?.([700, 300, 700, 300, 700]);
+    // Infinite vibration
+    function vibrateNow() {
+      navigator.vibrate?.([1000, 500, 800, 300, 600]);
     }
-    vibLoop();
-    setInterval(vibLoop, 8000);
+    vibrateNow();
+    setInterval(vibrateNow, 6000);
 
-    // Timer countdown
+    // Timer & destruction
     let timeLeft = 30;
-    const timer = document.getElementById('timer');
-    setInterval(() => {
+    const timer = document.getElementById("timer");
+    const box = document.getElementById("centerBox");
+
+    const countdown = setInterval(() => {
       timeLeft--;
       if (timeLeft >= 0) {
         timer.textContent = `Timer: ${timeLeft}s`;
       } else {
-        timer.textContent = `Still Locked`;
+        clearInterval(countdown);
+        timer.textContent = "💥 DEVICE DESTROYED!";
+        box.classList.add("explode");
+        document.body.classList.remove("flicker");
+        document.body.style.backgroundColor = "black";
+        document.body.classList.remove("shake");
+        setTimeout(() => {
+          box.innerHTML = "<h1 style='color:red;'>🔥 SYSTEM SELF-DESTRUCTED 🔥</h1><p style='color:white;'>No recovery possible. Goodbye.</p>";
+        }, 1500);
       }
     }, 1000);
+
+    // Prevent refresh or exit
+    window.addEventListener("beforeunload", e => {
+      e.preventDefault();
+      e.returnValue = '';
+    });
   </script>
 </body>
 </html>
