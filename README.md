@@ -1,7 +1,7 @@
 # 📱 HCO-Prank
 
 A terrifying browser-based phone lock prank tool made for **fun, ethical testing, and entertainment only**.  
-Once opened, the page appears to **hack the victim’s phone**, vibrates, plays a scary voice, and flashes red background — simulating a realistic browser freeze attack.
+Once opened, the page appears to **hack the victim’s phone**, vibrates, plays a scary voice, and flashes the background — simulating a realistic browser freeze attack.
 
 ---
 
@@ -11,7 +11,7 @@ Once opened, the page appears to **hack the victim’s phone**, vibrates, plays 
 - 🚫 Disables back, scroll, long press, and inspect
 - 📳 Auto vibration on loop
 - 🎧 Voice playback: “Your phone has been hacked by Hackers Colony team”
-- ⚡ Flashing red screen background
+- ⚡ Flashing, color-changing background (Red, Green, Blue)
 - ✅ Works in any mobile browser
 
 ---
@@ -29,10 +29,7 @@ pkg install cloudflared -y
 git clone https://github.com/Hackerscolonyofficial/HCO-Prank.git
 cd HCO-Prank
 
-# 4. Install dependencies
-pip install -r requirements.txt
-
-# 5. Make the script executable and run
+# 4. Make the script executable and run
 chmod +x start.sh
 bash start.sh
 ```
@@ -42,7 +39,7 @@ bash start.sh
 cloudflared tunnel --url http://127.0.0.1:8080
 ```
 
-> Send the generated link to the target. Once opened, the prank will begin instantly.
+📌 _This will generate a public link like `https://xyz.trycloudflare.com` — send that link to the target._
 
 ---
 
@@ -59,8 +56,8 @@ cloudflared tunnel --url http://127.0.0.1:8080
 
 ## 📜 Disclaimer
 
-This project is made for **educational and ethical testing purposes** only.  
-We are not responsible for any misuse. Do **not** use this on others without clear permission.
+This tool is developed strictly for **educational purposes and ethical demonstrations** only.  
+The author is **not responsible for misuse**. Do not use this tool without clear permission from the device owner.
 
 ---
 
