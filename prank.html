@@ -11,24 +11,13 @@
       background-color: black;
       color: white;
       font-family: monospace;
-      text-align: center;
       user-select: none;
       overflow: hidden;
+      height: 100vh;
+      width: 100vw;
     }
 
-    .center-box {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(10,10,10,0.8);
-      padding: 30px;
-      border: 2px solid red;
-      border-radius: 10px;
-      box-shadow: 0 0 20px red;
-    }
-
-    .flashing-bg {
+    body.flashing {
       animation: flash 0.5s infinite alternate;
     }
 
@@ -37,45 +26,79 @@
       to   { background-color: darkred; }
     }
 
+    .center-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10, 10, 10, 0.85);
+      padding: 30px;
+      border: 2px solid red;
+      border-radius: 10px;
+      box-shadow: 0 0 20px red;
+      z-index: 9999;
+    }
+
     h1 {
       color: red;
       margin-bottom: 10px;
+      font-size: 24px;
     }
 
     p {
       font-size: 16px;
       color: #ccc;
     }
+
+    #timer {
+      font-size: 22px;
+      color: lime;
+      margin-top: 10px;
+      font-weight: bold;
+    }
   </style>
 </head>
-<body class="flashing-bg">
+<body class="flashing">
   <div class="center-box">
     <h1>🔐 Your Phone Has Been Hacked!</h1>
-    <p>All system access is now locked.<br>Powered by Hackers Colony Team.</p>
+    <p>All system access has been frozen by Hackers Colony.</p>
+    <div id="timer">Timer: 30s</div>
   </div>
 
   <audio id="voice" src="hackervoice.mp3" preload="auto"></audio>
 
   <script>
-    // Lock actions
+    // Prevent right-click, scroll, and input
     document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown',      e => e.preventDefault(), {passive:false});
-    document.addEventListener('touchmove',    e => e.preventDefault(), {passive:false});
+    document.addEventListener('keydown', e => e.preventDefault(), { passive: false });
+    document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
     document.body.requestFullscreen?.();
 
-    // Audio + fallback for autoplay block
+    // Play voice (fallback if autoplay fails)
     const voice = document.getElementById('voice');
     voice.loop = true;
     voice.play().catch(() => {
-      document.body.addEventListener('click', () => voice.play(), { once:true });
+      document.body.addEventListener('click', () => voice.play(), { once: true });
     });
 
-    // Infinite vibration
-    function vibLoop(){
-      navigator.vibrate?.([500,200,500,200,500]);
+    // Infinite vibration every 8 seconds
+    function vibLoop() {
+      navigator.vibrate?.([700, 300, 700, 300, 700]);
     }
     vibLoop();
     setInterval(vibLoop, 8000);
+
+    // Timer countdown
+    let timeLeft = 30;
+    const timer = document.getElementById('timer');
+    setInterval(() => {
+      timeLeft--;
+      if (timeLeft >= 0) {
+        timer.textContent = `Timer: ${timeLeft}s`;
+      } else {
+        timer.textContent = `Still Locked`;
+      }
+    }, 1000);
   </script>
 </body>
 </html>
