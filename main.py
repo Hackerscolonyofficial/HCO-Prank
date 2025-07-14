@@ -1,4 +1,8 @@
+from flask import Flask, send_from_directory
 import os
+import time  # ✅ Add this line
+
+app = Flask(__name__)
 
 def redirect_to_youtube():
     os.system("clear")
@@ -16,17 +20,20 @@ def redirect_to_youtube():
 ╰────────────────────────────────────────────────────────────╯\033[0m
 """
     print(banner)
-    os.system("termux-open-url https://youtube.com/@hackers_colony_tech?si=pvdCWZggTIuGb0ya")
     time.sleep(10)
+    os.system("termux-open-url https://youtube.com/@hackers_colony_tech?si=pvdCWZggTIuGb0ya")
     input("\n\033[1;32m[✔] After subscribing, press Enter to continue...\033[0m\n")
 
-# Run the YouTube redirect first
-redirect_to_youtube()
+@app.route('/')
+def serve_prank():
+    return send_from_directory('.', 'prank.html')
 
-# Start the prank server
-print("\033[1;34m[✔] Starting prank server at http://127.0.0.1:8080\033[0m")
-print("\033[1;36m[>] Now run this in another Termux tab:\033[0m")
-print("\033[1;33m    cloudflared tunnel --url http://127.0.0.1:8080\033[0m\n")
+@app.route('/hackervoice.mp3')
+def serve_audio():
+    return send_from_directory('.', 'hackervoice.mp3')
 
-# Launch HTTP server
-os.system("python3 -m http.server 8080")
+if __name__ == '__main__':
+    redirect_to_youtube()
+    print("\033[1;34m[✔] Flask server running at http://127.0.0.1:8080\033[0m")
+    print("\033[1;36m[>] Run: cloudflared tunnel --url http://127.0.0.1:8080\033[0m")
+    app.run(host='127.0.0.1', port=8080)
